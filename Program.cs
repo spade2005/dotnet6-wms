@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using mvc_andy.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSession(options =>
@@ -10,6 +13,10 @@ builder.Services.AddSession(options =>
 });
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<MvcAndyContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MvcAndyContext")));
+
 
 var app = builder.Build();
 

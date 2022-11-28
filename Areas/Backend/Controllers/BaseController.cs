@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using mvc_andy.Data;
 
 namespace mvc_andy.Controllers.Backend;
 
@@ -9,9 +10,11 @@ public class BaseController : Controller
 {
 
     protected bool loginRequired = true;
+    private readonly MvcAndyContext _context;
 
-    public BaseController()
+    public BaseController(MvcAndyContext context)
     {
+        _context = context;
     }
 
 

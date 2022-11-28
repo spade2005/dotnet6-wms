@@ -1,13 +1,12 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using mvc_andy.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using mvc_andy.Data;
 
 namespace mvc_andy.Controllers.Backend;
 
 public class HomeController : BaseController
 {
 
-    public HomeController() : base()
+    public HomeController(MvcAndyContext context) : base(context)
     {
     }
 

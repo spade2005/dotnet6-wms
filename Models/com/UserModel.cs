@@ -10,7 +10,7 @@ public class UserModel
     public int Id { get; set; }
     [Display(Name = "账号")]
     [StringLength(20, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 4)]
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
 
     [DataType(DataType.Password)]
     [Display(Name = "密码")]
