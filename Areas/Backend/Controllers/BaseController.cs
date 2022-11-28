@@ -10,7 +10,7 @@ public class BaseController : Controller
 {
 
     protected bool loginRequired = true;
-    private readonly MvcAndyContext _context;
+    protected readonly MvcAndyContext _context;
 
     public BaseController(MvcAndyContext context)
     {
