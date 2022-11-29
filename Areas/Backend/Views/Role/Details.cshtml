@@ -1,0 +1,42 @@
+@model mvc_andy.Models.com.RoleModel
+
+@{
+    ViewData["Title"] = "详细";
+}
+
+<h1>详细</h1>
+
+<div>
+    <h4>角色详细</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Mark)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Mark)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreateAt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreateAt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UpdateAt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UpdateAt)
+        </dd>
+    </dl>
+</div>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model?.Id">更新</a> |
+    <a asp-action="Index">返回列表</a>
+</div>
