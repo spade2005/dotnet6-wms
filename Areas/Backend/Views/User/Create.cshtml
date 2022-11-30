@@ -1,12 +1,12 @@
 @model mvc_andy.Models.com.UserModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "创建";
 }
 
-<h1>Create</h1>
+<h1>创建</h1>
 
-<h4>UserModel</h4>
+<h4>管理员的创建</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -39,38 +39,38 @@
             </div>
             <div class="form-group">
                 <label asp-for="RoleId" class="control-label"></label>
-                <input asp-for="RoleId" class="form-control" />
+                <select class="form-control" asp-for="RoleId">
+                    @{
+                        var list = ViewData["list"] as List<mvc_andy.Models.com.RoleModel>;
+                        if (list!=null && list.Any() )
+                        {
+                            foreach (var item in list)
+                            {
+                                <option value="@item.Id">@Html.DisplayFor(modelItem => item.Name)
+                                </option>
+                            }
+                        }
+                    }
+                </select>
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
+                <select asp-for="Status" class="form-control">
+                    <option value="@mvc_andy.Models.com.StatusType.Enable">启用</option>
+                    <option value="@mvc_andy.Models.com.StatusType.Disable">禁用</option>
+                </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreateAt" class="control-label"></label>
-                <input asp-for="CreateAt" class="form-control" />
-                <span asp-validation-for="CreateAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdateAt" class="control-label"></label>
-                <input asp-for="UpdateAt" class="form-control" />
-                <span asp-validation-for="UpdateAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deleted" class="control-label"></label>
-                <select asp-for="Deleted" class="form-control"></select>
-                <span asp-validation-for="Deleted" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group mt-2">
+                <input type="submit" value="创建" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="mt-3">
+    <a asp-action="Index">返回列表</a>
 </div>
 
 @section Scripts {

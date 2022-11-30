@@ -22,17 +22,17 @@ public class RoleController : BaseController
     public async Task<IActionResult> Index(string searchString, int? pageNumber)
     {
         var role = from m in _context.RoleModels
-                       where m.Deleted.Equals(0)
-                       select m;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                role = role.Where(s => s.Name!.Contains(searchString));
-            }
-            role = role.OrderByDescending(s => s.Id);
+                   where m.Deleted.Equals(DeleteType.Enable)
+                   select m;
+        if (!String.IsNullOrEmpty(searchString))
+        {
+            role = role.Where(s => s.Name!.Contains(searchString));
+        }
+        role = role.OrderByDescending(s => s.Id);
 
-            int pageSize = 10;
-            return View(await PaginatedList<RoleModel>.CreateAsync(role.AsNoTracking(), pageNumber ?? 1, pageSize));
-            
+        int pageSize = 10;
+        return View(await PaginatedList<RoleModel>.CreateAsync(role.AsNoTracking(), pageNumber ?? 1, pageSize));
+
         // return _context.RoleModels != null ?
         //             View(await _context.RoleModels.ToListAsync()) :
         //             Problem("Entity set 'MvcAndyContext.RoleModels'  is null.");

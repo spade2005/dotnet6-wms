@@ -44,4 +44,14 @@ public class UserModel
     public DateTime UpdateAt { get; set; }
 
     public DeleteType Deleted { get; set; }
+
+
+    public string StatusStr()
+    {
+        if (Status == StatusType.Enable)
+        {
+            return "启用";
+        }
+        return "禁用";
+    }
 }
