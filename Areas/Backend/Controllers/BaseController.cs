@@ -20,6 +20,9 @@ public class BaseController : Controller
 
     public override void OnActionExecuting(ActionExecutingContext filterContext)
     {
+        if(!loginRequired){
+            return;
+        }
         this._checkLogin(filterContext.HttpContext);
     }
 

@@ -1,0 +1,56 @@
+@model mvc_andy.Models.com.UserModel
+@{
+  Layout = "_Blank";
+  ViewData["Title"] = "用户登录";
+}
+<style>
+  .login-div{
+      width: 50%;
+      height: 50%;
+      overflow: hidden;
+      margin: auto;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      z-index: 999;
+  }
+  </style>
+<div class="login-div">
+  <h1>User Login</h1>
+
+  <hr />
+  <div class="row">
+      <div class="col-md-6">
+          <form asp-action="Login">
+              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+              <div class="mb-3 row form-group">
+                <label asp-for="UserName" class="col-sm-2 col-md-2 col-lg-2 text-center col-form-label"></label>
+                <div class="col">
+                  <input asp-for="UserName" type="text" class="form-control" >
+                  <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="mb-3 row form-group">
+                <label asp-for="UserPass" class="col-sm-2  col-md-2 col-lg-2 text-center col-form-label"></label>
+                <div class="col">
+                  <input asp-for="UserPass" class="form-control">
+                  <span asp-validation-for="UserPass" class="text-danger"></span>
+                </div>
+              </div>
+               <div class="mb-3 row">
+
+                <label class="col-sm-3 col-lg-2 col-form-label"></label>
+                <div class="col">
+                  <input type="submit" value="Login" class="btn btn-primary" />
+                </div>
+              </div>
+              <br>
+              <div class="form-group">
+                  
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
