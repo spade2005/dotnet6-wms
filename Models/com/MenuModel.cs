@@ -9,7 +9,7 @@ public class MenuModel
     public int Id { get; set; }
     [Display(Name = "名称")]
     [StringLength(20, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 3)]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     [Display(Name = "级别")]
     public int ParentId { get; set; }
     [Display(Name = "类型")]
@@ -17,11 +17,11 @@ public class MenuModel
     [Display(Name = "排序")]
     public int SortBy { get; set; }
     [Display(Name = "样式")]
-    public string? Style { get; set; }
+    public string Style { get; set; } = string.Empty;
     [Display(Name = "uri")]
-    public string? Router { get; set; }
+    public string Router { get; set; } = string.Empty;
     [Display(Name = "备注")]
-    public string? Mark { get; set; }
+    public string Mark { get; set; } = string.Empty;
 
     [Display(Name = "状态")]
     public StatusType Status { get; set; }

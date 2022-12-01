@@ -11,7 +11,7 @@ namespace mvc_andy.Services.Backend;
 public class UserService
 {
     private static UserService? _myUserHelp;
-    private MvcAndyContext _context;
+    private MvcAndyContext? _context;
 
     public static UserService CreateObject()
     {
@@ -44,15 +44,17 @@ public class UserService
 
     public async Task<Dictionary<int, String>> getRoleList(List<int> ids)
     {
+        Dictionary<int, String> tmp = new Dictionary<int, string>();
+        if (_context == null) return tmp;
         var role = from m in _context.RoleModels
                    where m.Deleted.Equals(DeleteType.Enable)
                    select m;
         role = role.Where(s => ids.Contains(s.Id));
         var roleList = await role.ToListAsync();
-        Dictionary<int, String> tmp = new Dictionary<int, string>();
+
         foreach (var item in roleList)
         {
-            tmp.Add(item.Id, item.Name);
+            tmp.Add(item.Id, item.Name ?? "");
         }
         return tmp;
     }
@@ -61,6 +63,7 @@ public class UserService
 
     public async Task<List<RoleModel>> getRoleList()
     {
+        if (_context == null) return new List<RoleModel>();
         var role = from m in _context.RoleModels
                    where m.Deleted.Equals(DeleteType.Enable)
                    select m;
@@ -69,14 +72,15 @@ public class UserService
     }
 
 
-    public async Task<UserModel> getSessionUser(int? uid)
+    public UserModel getSessionUser(int? uid)
     {
+        if (_context == null) return new UserModel();
         //填充 user 和 menu。
         var user = from m in _context.UserModels
-                   where m.Deleted.Equals(0)
+                   where m.Deleted.Equals(DeleteType.Enable)
                    where m.Id.Equals(uid)
                    select m;
-        return await user.FirstOrDefaultAsync();
+        return  user.FirstOrDefault();
     }
 
 
