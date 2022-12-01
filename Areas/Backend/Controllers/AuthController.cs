@@ -80,7 +80,14 @@ public class AuthController : Controller
             await _context.SaveChangesAsync();
             // userLog.Message += " success";
             // UserLogHelp.Load().publish(userLog);
-            HttpContext.Session.SetInt32("UserInfo", modelTest.Id);
+            System.Console.WriteLine(" print set id");
+                System.Console.WriteLine(HttpContext);
+            if (HttpContext != null)
+            {
+                System.Console.WriteLine("not null.set id");
+                System.Console.WriteLine(modelTest.Id);
+                HttpContext.Session.SetInt32("UserInfo", modelTest.Id);
+            }
             return RedirectToAction(nameof(Index), "Home", new { area = "Backend" });
         }
         return View(userModel);
