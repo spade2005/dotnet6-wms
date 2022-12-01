@@ -64,10 +64,20 @@ public class UserService
         var role = from m in _context.RoleModels
                    where m.Deleted.Equals(DeleteType.Enable)
                    select m;
-        role = role.OrderByDescending(s=>s.Id);
+        role = role.OrderByDescending(s => s.Id);
         return await role.ToListAsync();
     }
 
+
+    public async Task<UserModel> getSessionUser(int? uid)
+    {
+        //填充 user 和 menu。
+        var user = from m in _context.UserModels
+                   where m.Deleted.Equals(0)
+                   where m.Id.Equals(uid)
+                   select m;
+        return await user.FirstOrDefaultAsync();
+    }
 
 
 

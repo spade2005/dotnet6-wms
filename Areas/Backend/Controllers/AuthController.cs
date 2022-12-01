@@ -4,11 +4,14 @@ using mvc_andy.Models.com;
 
 namespace mvc_andy.Controllers.Backend;
 
-public class AuthController : BaseController
+[Area("Backend")]
+public class AuthController : Controller
 {
 
-    public AuthController(MvcAndyContext context) : base(context)
+    protected readonly MvcAndyContext _context;
+    public AuthController(MvcAndyContext context)
     {
+        _context = context;
     }
 
     public IActionResult Index()
@@ -26,7 +29,7 @@ public class AuthController : BaseController
         return View();
     }
 
- [HttpPost]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login([Bind("UserName,UserPass")] UserModel userModel)
     {
@@ -78,7 +81,7 @@ public class AuthController : BaseController
             // userLog.Message += " success";
             // UserLogHelp.Load().publish(userLog);
             HttpContext.Session.SetInt32("UserInfo", modelTest.Id);
-            return RedirectToAction(nameof(Index), "Home", new { area = "Admin" });
+            return RedirectToAction(nameof(Index), "Home", new { area = "Backend" });
         }
         return View(userModel);
     }
