@@ -25,17 +25,48 @@
                             <a class="nav-link text-dark" asp-area="Backend" asp-controller="Home"
                                 asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Backend" asp-controller="Home"
-                                asp-action="Info">系统设置</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                系统设置
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li class="nav-item">
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="User" asp-action="Index">用户管理</a>
+                                </li>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="Role" asp-action="Index">角色管理</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Backend" asp-controller="User" asp-action="Index">用户管理</a>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                WMS管理
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li class="nav-item">
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="GoodsCate" asp-action="Index">商品分类管理</a>
+                                </li>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="Goods" asp-action="Index">商品管理</a>
+                                </li>
+                                
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="GoodsIn" asp-action="Index">入库管理</a>
+                                </li>
+                                
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="GoodsOut" asp-action="Index">出库管理</a>
+                                </li>
+                            </ul>
                         </li>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Backend" asp-controller="Role" asp-action="Index">角色管理</a>
-                        </li>
+                        
                     </ul>
 
                     <div class="d-flex">
@@ -48,9 +79,12 @@
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     @if (user != null)
                                     {
-                                        if(user.NickName!=""){
+                                        if (user.NickName != "")
+                                        {
                                             @user.NickName
-                                        }else{
+                                        }
+                                        else
+                                        {
                                             @user.UserName
                                         }
                                     }

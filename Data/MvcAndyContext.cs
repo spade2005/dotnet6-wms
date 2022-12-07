@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using mvc_andy.Models.com;
+using mvc_andy.Models.wms;
 
 namespace mvc_andy.Data;
 
@@ -16,11 +17,26 @@ public class MvcAndyContext : DbContext
     public DbSet<RoleMenuModel> RoleMenuModels { get; set; }
     public DbSet<MenuModel> MenuModels { get; set; }
 
+    public DbSet<GoodsCateModel> GoodsCateModels { get; set; }
+    public DbSet<GoodsModel> GoodsModels { get; set; }
+    public DbSet<OrderInModel> OrderInModels { get; set; }
+    public DbSet<OrderOutModel> OrderOutModels { get; set; }
+    public DbSet<OrderGoodsModel> OrderGoodsModels { get; set; }
+    public DbSet<OrderAuditModel> OrderAuditModels { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserModel>().ToTable("com_user");
         modelBuilder.Entity<MenuModel>().ToTable("com_menu");
         modelBuilder.Entity<RoleMenuModel>().ToTable("com_role_menu");
         modelBuilder.Entity<RoleModel>().ToTable("com_role");
+
+
+        modelBuilder.Entity<GoodsCateModel>().ToTable("wms.goods_cate");
+        modelBuilder.Entity<GoodsModel>().ToTable("wms.goods");
+        modelBuilder.Entity<OrderInModel>().ToTable("wms.order_in");
+        modelBuilder.Entity<OrderOutModel>().ToTable("wms.order_out");
+        modelBuilder.Entity<OrderGoodsModel>().ToTable("wms.order_goods");
+        modelBuilder.Entity<OrderAuditModel>().ToTable("wms.order_audit");
     }
 }

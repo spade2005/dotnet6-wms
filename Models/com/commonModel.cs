@@ -17,3 +17,23 @@ public enum DeleteType
     Disable,
     Pending
 }
+
+public enum OrderStatusType
+{
+    Pending = 1,
+    Failed,
+    Success,
+}
+
+public enum StockType
+{
+    Default = 0,
+    Pending,
+    Success
+}
+
+public enum OrderInOutType
+{
+    In = 1,
+    Out
+}
