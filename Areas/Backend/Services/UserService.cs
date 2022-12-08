@@ -72,7 +72,7 @@ public class UserService
     }
 
 
-    public UserModel getSessionUser(int? uid)
+    public UserModel? getSessionUser(int? uid)
     {
         if (_context == null) return new UserModel();
         //填充 user 和 menu。

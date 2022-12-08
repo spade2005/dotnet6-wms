@@ -1,0 +1,85 @@
+@model mvc_andy.Models.wms.GoodsModel
+
+@{
+    ViewData["Title"] = "创建";
+}
+
+<h1>创建</h1>
+
+<h4>商品创建</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubTitle" class="control-label"></label>
+                <input asp-for="SubTitle" class="form-control" />
+                <span asp-validation-for="SubTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CateId" class="control-label"></label>
+                <select asp-for="CateId" class="form-control">
+                    @{
+                        var list = ViewData["list"] as List<mvc_andy.Models.wms.GoodsCateModel>;
+                        if (list != null && list.Any())
+                        {
+                            foreach (var item in list)
+                            {
+                                <option value="@item.Id">@Html.DisplayFor(modelItem => item.Name)</option>
+                            }
+                        }
+                    }
+                </select>
+                <span asp-validation-for="CateId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNumber" class="control-label"></label>
+                <input asp-for="SerialNumber" class="form-control" />
+                <span asp-validation-for="SerialNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sku" class="control-label"></label>
+                <input asp-for="Sku" class="form-control" />
+                <span asp-validation-for="Sku" class="text-danger"></span>
+            </div>
+            @*
+                <div class="form-group">
+                <label asp-for="Logo" class="control-label"></label>
+                <input asp-for="Logo" class="form-control" />
+                <span asp-validation-for="Logo" class="text-danger"></span>
+                </div>
+            *@
+
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsOnSale" class="control-label"></label>
+                <select asp-for="IsOnSale" class="form-control">
+                    <option value="@mvc_andy.Models.com.GoodsSalesType.On">上架</option>
+                    <option value="@mvc_andy.Models.com.GoodsSalesType.Off">下架</option>
+                </select>
+                <span asp-validation-for="IsOnSale" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="创建" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index">返回列表</a>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

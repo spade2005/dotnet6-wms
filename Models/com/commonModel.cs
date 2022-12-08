@@ -37,3 +37,11 @@ public enum OrderInOutType
     In = 1,
     Out
 }
+
+
+public enum GoodsSalesType
+{
+    On = 1,
+    Off
+
+}

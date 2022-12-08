@@ -32,11 +32,11 @@ public class MvcAndyContext : DbContext
         modelBuilder.Entity<RoleModel>().ToTable("com_role");
 
 
-        modelBuilder.Entity<GoodsCateModel>().ToTable("wms.goods_cate");
-        modelBuilder.Entity<GoodsModel>().ToTable("wms.goods");
-        modelBuilder.Entity<OrderInModel>().ToTable("wms.order_in");
-        modelBuilder.Entity<OrderOutModel>().ToTable("wms.order_out");
-        modelBuilder.Entity<OrderGoodsModel>().ToTable("wms.order_goods");
-        modelBuilder.Entity<OrderAuditModel>().ToTable("wms.order_audit");
+        modelBuilder.Entity<GoodsCateModel>().ToTable("wms_goods_cate");
+        modelBuilder.Entity<GoodsModel>().ToTable("wms_goods");
+        modelBuilder.Entity<OrderInModel>().ToTable("wms_order_in");
+        modelBuilder.Entity<OrderOutModel>().ToTable("wms_order_out");
+        modelBuilder.Entity<OrderGoodsModel>().ToTable("wms_order_goods");
+        modelBuilder.Entity<OrderAuditModel>().ToTable("wms_order_audit");
     }
 }

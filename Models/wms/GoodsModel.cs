@@ -33,8 +33,8 @@ public class GoodsModel
     [Display(Name = "内容")]
     public string Content { get; set; } = string.Empty;
 
-    [Display(Name = "是否上架")]
-    public int IsOnSale { get; set; } = 0;
+    [Display(Name = "上架")]
+    public GoodsSalesType IsOnSale { get; set; }
 
     [Display(Name = "排序")]
     public int SortBy { get; set; } = 0;
@@ -61,5 +61,21 @@ public class GoodsModel
     [Display(Name = "更新日期")]
     public DateTime UpdateAt { get; set; }
     public DeleteType Deleted { get; set; }
+
+    public string IsOnSaleStr()
+    {
+        string str = string.Empty;
+        switch (IsOnSale)
+        {
+            case GoodsSalesType.On:
+                str = "已上架";
+                break;
+            case GoodsSalesType.Off:
+                str = "已下架";
+                break;
+        }
+
+        return str;
+    }
 
 }

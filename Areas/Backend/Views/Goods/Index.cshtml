@@ -1,0 +1,111 @@
+@model mvc_andy.Services.Backend.PaginatedList<mvc_andy.Models.wms.GoodsModel>
+
+@{
+    ViewData["Title"] = "商品列表";
+}
+
+<h1>商品列表</h1>
+
+<p>
+    <a asp-action="Create">创建</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].SubTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].CateId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].SerialNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Sku)
+            </th>
+            @*             
+            <th>
+                @Html.DisplayNameFor(model => model[0].Logo)
+            </th> 
+            *@
+            <th>
+                @Html.DisplayNameFor(model => model[0].IsOnSale)
+            </th>
+            <th>
+                库存 / 总
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].CreateAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].UpdateAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var cateList = ViewData["cateList"] as Dictionary<int, string>;
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTitle)
+                </td>
+                <td>
+                    @if (cateList != null && cateList.Any() && cateList.ContainsKey(item.CateId))
+                    {
+                        @cateList[item.CateId]
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sku)
+                </td>
+                @* 
+                <td>
+                    @Html.DisplayFor(modelItem => item.Logo)
+                </td>
+                 *@
+                <td>
+                    @item.IsOnSaleStr()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity) / @Html.DisplayFor(modelItem => item.TotalQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateAt)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">更新</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">详细</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled">
+    Next
+</a>
