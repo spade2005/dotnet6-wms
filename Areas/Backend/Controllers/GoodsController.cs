@@ -215,4 +215,63 @@ public class GoodsController : BaseController
     {
         return (_context.GoodsModels?.Any(e => e.Id == id)).GetValueOrDefault();
     }
+
+
+    // GET: Goods
+    public async Task<IActionResult> ListJson(string goodsSn, string goodsTitle, int? start, int? length)
+    {
+        var model = _context.GoodsModels.Where(m => m.Deleted.Equals(DeleteType.Enable));
+        if (!String.IsNullOrEmpty(goodsSn))
+        {
+            model = model.Where(s => s.SerialNumber!.Contains(goodsSn));
+        }
+        if (!String.IsNullOrEmpty(goodsTitle))
+        {
+            model = model.Where(s => s.Title!.Contains(goodsTitle));
+        }
+        model = model.OrderByDescending(s => s.Id);
+
+        if (start == null || start <= 0)
+        {
+            start = 0;
+        }
+        if (length == null || length <= 0 || length > 100)
+        {
+            length = 10;
+        }
+        var list = await model.AsNoTracking().Skip((int)start).Take((int)length)
+        .Select(m => new
+        {
+            id = m.Id,
+            title = m.Title,
+            sn = m.SerialNumber,
+            sku = m.Sku,
+            CateId = m.CateId,
+            quantity = m.Quantity,
+            totalQuantity = m.TotalQuantity,
+        })
+        .ToListAsync();
+        List<int> ids = new List<int>();
+        foreach (var item in list)
+        {
+            if (!ids.Contains(item.CateId))
+            {
+                ids.Add(item.CateId);
+            }
+        }
+        var cateList = await GoodsService.CreateObject().setDbContext(_context).getGoodsCateList(ids);
+        // foreach (var item in list)
+        // {
+        //     if (cateList.ContainsKey(item.CateId))
+        //     {
+        //         item.CateName = cateList[item.CateId];
+        //     }
+        // }
+        // return Json(list);
+        return Json(CommonService.CreateObject().jsonFormat(0, "success",
+            new Dictionary<string, object>() { { "list", list }, { "cateList", cateList } }
+        ));
+        // return Json(CommonService.CreateObject().jsonFormat(0, "success", list));
+    }
+
 }
