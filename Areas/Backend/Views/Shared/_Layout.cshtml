@@ -57,12 +57,12 @@
                                 
                                 </li>
                                 <li class="nav-item">
-                                    <a class="dropdown-item" asp-area="Backend" asp-controller="GoodsIn" asp-action="Index">入库管理</a>
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="OrderIn" asp-action="Index">入库管理</a>
                                 </li>
                                 
                                 </li>
                                 <li class="nav-item">
-                                    <a class="dropdown-item" asp-area="Backend" asp-controller="GoodsOut" asp-action="Index">出库管理</a>
+                                    <a class="dropdown-item" asp-area="Backend" asp-controller="OrderOut" asp-action="Index">出库管理</a>
                                 </li>
                             </ul>
                         </li>
@@ -116,6 +116,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("MyScripts", required: false)
 </body>
 
 </html>

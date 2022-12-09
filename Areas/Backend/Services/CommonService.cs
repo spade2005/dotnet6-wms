@@ -45,5 +45,10 @@ public class CommonService
         }
     }
 
+    public Dictionary<string, object> jsonFormat(int code, string message, object obj)
+    {
+        return new Dictionary<string, object>() { { "code", code }, { "message", message }, { "data", obj } };
+    }
+
 
 }

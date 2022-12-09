@@ -1,0 +1,84 @@
+@model mvc_andy.Models.wms.OrderInModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>OrderInModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="OrderNo" class="control-label"></label>
+                <input asp-for="OrderNo" class="form-control" />
+                <span asp-validation-for="OrderNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mark" class="control-label"></label>
+                <input asp-for="Mark" class="form-control" />
+                <span asp-validation-for="Mark" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderStatus" class="control-label"></label>
+                <select asp-for="OrderStatus" class="form-control"></select>
+                <span asp-validation-for="OrderStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StockStatus" class="control-label"></label>
+                <select asp-for="StockStatus" class="form-control"></select>
+                <span asp-validation-for="StockStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuditTime" class="control-label"></label>
+                <input asp-for="AuditTime" class="form-control" />
+                <span asp-validation-for="AuditTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StockTime" class="control-label"></label>
+                <input asp-for="StockTime" class="form-control" />
+                <span asp-validation-for="StockTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeOfDay" class="control-label"></label>
+                <input asp-for="TimeOfDay" class="form-control" />
+                <span asp-validation-for="TimeOfDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeOfMonth" class="control-label"></label>
+                <input asp-for="TimeOfMonth" class="form-control" />
+                <span asp-validation-for="TimeOfMonth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateAt" class="control-label"></label>
+                <input asp-for="CreateAt" class="form-control" />
+                <span asp-validation-for="CreateAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateAt" class="control-label"></label>
+                <input asp-for="UpdateAt" class="form-control" />
+                <span asp-validation-for="UpdateAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Deleted" class="control-label"></label>
+                <select asp-for="Deleted" class="form-control"></select>
+                <span asp-validation-for="Deleted" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

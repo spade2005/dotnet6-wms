@@ -18,6 +18,9 @@ public class OrderOutModel
     [StringLength(250, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 1)]
     public string Mark { get; set; } = string.Empty;
 
+    [Display(Name = "操作数量")]
+    public int GoodsNum { get; set; } = 0;
+
     [Display(Name = "单据状态")]
     public OrderStatusType OrderStatus { get; set; }
 

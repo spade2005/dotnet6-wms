@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using mvc_andy.Models.com;
 
 namespace mvc_andy.Models.wms;
@@ -10,8 +11,9 @@ public class OrderAuditModel
 
     public int Id { get; set; }
 
+    [Column("type")]
     [Display(Name = "类型")]
-    public OrderInOutType type { get; set; }
+    public OrderInOutType Type { get; set; }
 
     [Display(Name = "所属订单")]
     public int OrderId { get; set; }

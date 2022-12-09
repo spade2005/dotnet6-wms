@@ -51,7 +51,7 @@ public class GoodsService
                     where m.Deleted.Equals(DeleteType.Enable)
                     select m;
         model = model.Where(s => ids.Contains(s.Id));
-        var list = await model.ToListAsync();
+        var list = await model.AsNoTracking().ToListAsync();
 
         foreach (var item in list)
         {
@@ -71,5 +71,74 @@ public class GoodsService
     }
 
 
+
+    // 获取入库单商品明细
+    public async Task<List<OrderGoodsModel>> getOrderGoods(OrderInModel orderInModel)
+    {
+        if (_context == null) return new List<OrderGoodsModel>();
+        var model = from m in _context.OrderGoodsModels
+                    where m.Deleted.Equals(DeleteType.Enable)
+                    select m;
+        model = model.Where(s => s.OrderId.Equals(orderInModel.Id));
+        var orderGoodsList = await model.ToListAsync();
+        if (orderGoodsList == null || !orderGoodsList.Any())
+        {
+            return orderGoodsList;
+        }
+        var goodsIds = getGoodsIds(orderGoodsList);
+        var goodsList = await getGoodsList(goodsIds);
+        if (goodsList != null && goodsList.Any())
+        {
+            Dictionary<int, GoodsModel> tmp = new Dictionary<int, GoodsModel>();
+            foreach (var item in goodsList)
+            {
+                if (!tmp.ContainsKey(item.Id))
+                {
+                    tmp.Add(item.Id, item);
+                }
+            }
+
+            foreach (var item in orderGoodsList)
+            {
+                if (tmp != null && tmp.ContainsKey(item.GoodsId))
+                {
+                    item.goods = tmp[item.GoodsId];
+                }
+            }
+        }
+
+        return orderGoodsList;
+
+
+    }
+
+    // 获取list下的goodsId
+    public List<int> getGoodsIds(List<OrderGoodsModel> list)
+    {
+        List<int> ids = new List<int>();
+        foreach (var item in list)
+        {
+            if (!ids.Contains(item.GoodsId))
+            {
+                ids.Add(item.GoodsId);
+            }
+        }
+        return ids;
+    }
+
+    public async Task<List<GoodsModel>?> getGoodsList(List<int> ids)
+    {
+        if (ids != null && ids.Any())
+        {
+            return null;
+        }
+        if (_context == null) return null;
+
+        var model = from m in _context.GoodsModels
+                    where m.Deleted.Equals(DeleteType.Enable)
+                    select m;
+        model = model.Where(s => ids.Contains(s.Id));
+        return await model.ToListAsync();
+    }
 
 }

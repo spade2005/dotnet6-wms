@@ -1,0 +1,108 @@
+@model mvc_andy.Services.Backend.PaginatedList<mvc_andy.Models.wms.OrderInModel>
+
+@{
+    ViewData["Title"] = "入库单列表";
+}
+
+<h1>入库单列表</h1>
+
+<p>
+    <a asp-action="Create">发起入库单</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model[0].OrderNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Mark)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].OrderStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].GoodsNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].StockStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].AuditTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].StockTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].CreateAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].UpdateAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mark)
+                </td>
+                <td>
+                    @item.OrderStatusStr()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoodsNum)
+                </td>
+                <td>
+                    @item.StockStatusStr()
+                </td>
+                <td>
+                    @if (@item.AuditTime == DateTime.MinValue)
+                    {
+                        <span>-</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.AuditTime)
+                    }
+                </td>
+                <td>
+                    @if (@item.StockTime == DateTime.MinValue)
+                    {
+                        <span>-</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.StockTime)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateAt)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">更新</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled">
+    Next
+</a>
