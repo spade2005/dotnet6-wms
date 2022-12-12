@@ -81,6 +81,12 @@ public class GoodsService
                     select m;
         model = model.Where(s => s.OrderId.Equals(orderInModel.Id));
         var orderGoodsList = await model.ToListAsync();
+        return orderGoodsList;
+
+    }
+
+    public async Task<List<OrderGoodsModel>> formatOrderGoods(List<OrderGoodsModel> orderGoodsList)
+    {
         if (orderGoodsList == null || !orderGoodsList.Any())
         {
             return orderGoodsList;
@@ -89,6 +95,7 @@ public class GoodsService
         var goodsList = await getGoodsList(goodsIds);
         if (goodsList != null && goodsList.Any())
         {
+            List<int> ids = new List<int>();
             Dictionary<int, GoodsModel> tmp = new Dictionary<int, GoodsModel>();
             foreach (var item in goodsList)
             {
@@ -96,19 +103,26 @@ public class GoodsService
                 {
                     tmp.Add(item.Id, item);
                 }
+                if (!ids.Contains(item.CateId))
+                {
+                    ids.Add(item.CateId);
+                }
             }
+            var cateList = await getGoodsCateList(ids);
 
             foreach (var item in orderGoodsList)
             {
                 if (tmp != null && tmp.ContainsKey(item.GoodsId))
                 {
                     item.goods = tmp[item.GoodsId];
+                    if (cateList.ContainsKey(item.goods.CateId))
+                    {
+                        item.goods.CateName = cateList[item.goods.CateId];
+                    }
                 }
             }
         }
-
         return orderGoodsList;
-
 
     }
 
@@ -128,12 +142,11 @@ public class GoodsService
 
     public async Task<List<GoodsModel>?> getGoodsList(List<int> ids)
     {
-        if (ids != null && ids.Any())
+        if (ids == null || !ids.Any())
         {
             return null;
         }
         if (_context == null) return null;
-
         var model = from m in _context.GoodsModels
                     where m.Deleted.Equals(DeleteType.Enable)
                     select m;

@@ -244,7 +244,7 @@ public class GoodsController : BaseController
         {
             id = m.Id,
             title = m.Title,
-            sn = m.SerialNumber,
+            serialNumber = m.SerialNumber,
             sku = m.Sku,
             CateId = m.CateId,
             quantity = m.Quantity,

@@ -128,7 +128,7 @@ public class OrderInController : BaseController
             _context.OrderInModels.Add(orderInModel);
             await _context.SaveChangesAsync();
 
-            int i =0;
+            int i = 0;
             foreach (var item in goodsIds)
             {
                 var orderGoodsModel = new OrderGoodsModel();
@@ -160,7 +160,9 @@ public class OrderInController : BaseController
         {
             return NotFound();
         }
-        ViewData["list"] = await GoodsService.CreateObject().setDbContext(_context).getOrderGoods(orderInModel);
+        var orderGoodsList = await GoodsService.CreateObject().setDbContext(_context).getOrderGoods(orderInModel);
+        orderGoodsList = await GoodsService.CreateObject().formatOrderGoods(orderGoodsList);
+        ViewData["list"] = orderGoodsList;
         return View(orderInModel);
     }
 
@@ -169,7 +171,7 @@ public class OrderInController : BaseController
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Mark,GoodsList")] OrderInModel orderInModel)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Mark,OrderNo")] OrderInModel orderInModel, int[] goodsIds, int[] goodsNums)
     {
         if (id != orderInModel.Id)
         {
@@ -184,22 +186,115 @@ public class OrderInController : BaseController
         if (tmpModel.OrderStatus == OrderStatusType.Success)
         {
             //审核成功，不可再次编辑
-            return NotFound();
+            ModelState.AddModelError("OrderNo", "订单已审核通过,无法编辑");
+            return View(orderInModel);
+        }
+
+        if (!goodsIds.Any() || !goodsNums.Any() || goodsIds.Length != goodsNums.Length)
+        {
+
+            ModelState.AddModelError("OrderNo", "提交参数不正确");
+            return View(orderInModel);
+        }
+
+        if (!string.IsNullOrEmpty(orderInModel.OrderNo))
+        {
+            var modelTest = await _context.OrderInModels
+                .Where(m => m.OrderNo == orderInModel.OrderNo).Where(m => m.Deleted == DeleteType.Enable)
+                .Where(m => m.Id != tmpModel.Id)
+                .FirstOrDefaultAsync();
+            if (modelTest != null)
+            {
+                ModelState.AddModelError("OrderNo", "入库单已存在");
+                return View(orderInModel);
+            }
+        }
+        if (goodsNums.Any())
+        {
+            foreach (var num in goodsNums)
+            {
+                if (num <= 0 || num > 100000000)
+                {
+                    ModelState.AddModelError("OrderNo", "商品数量必须大于0的合法数值");
+                    return View(orderInModel);
+                }
+            }
+        }
+        if (goodsIds.Any())
+        {
+            var modelTest = from m in _context.GoodsModels
+                            where m.Deleted.Equals(DeleteType.Enable)
+                            select m;
+            modelTest = modelTest.Where(s => goodsIds.Contains(s.Id));
+            var list = await modelTest.AsNoTracking().ToListAsync();
+            if (list.ToArray().Length != goodsIds.Length)
+            {
+                ModelState.AddModelError("OrderNo", "选择的商品不合法。请重新选择。");
+                return View(orderInModel);
+            }
         }
 
         if (ModelState.IsValid)
         {
             try
             {
+                tmpModel.OrderNo = orderInModel.OrderNo;
                 tmpModel.Mark = orderInModel.Mark;
+                tmpModel.GoodsNum = goodsIds.Length;
                 tmpModel.UpdateAt = DateTime.Now;
                 if (tmpModel.OrderStatus == OrderStatusType.Failed)
                 {
                     tmpModel.OrderStatus = OrderStatusType.Pending;
                 }
-                //更新orderGoods。。
-                _context.Update(orderInModel);
+                _context.Update(tmpModel);
                 await _context.SaveChangesAsync();
+
+                //查询匹配orderGoods
+                var modelGoods = from m in _context.OrderGoodsModels
+                                 where m.Deleted.Equals(DeleteType.Enable)
+                                 select m;
+                modelGoods = modelGoods.Where(s => s.Type.Equals(OrderInOutType.In));
+                modelGoods = modelGoods.Where(s => s.OrderId.Equals(tmpModel.Id));
+                var goodsModels = await modelGoods.ToListAsync();
+                var goodsMap = new Dictionary<int, OrderGoodsModel>();
+                foreach (var item in goodsModels)
+                {
+                    goodsMap.Add(item.GoodsId, item);
+                    if (!goodsIds.Contains(item.GoodsId))
+                    {
+                        item.Deleted = DeleteType.Disable;
+                        item.UpdateAt = DateTime.Now;
+                        _context.OrderGoodsModels.Update(item);
+                    }
+                }
+                int i = 0;
+                foreach (var item in goodsIds)
+                {
+                    if (goodsMap.ContainsKey(item))
+                    {
+                        var orderGoodsModel = goodsMap[item];
+                        orderGoodsModel.Quantity = goodsNums[i];
+                        orderGoodsModel.UpdateAt = DateTime.Now;
+                        _context.OrderGoodsModels.Update(orderGoodsModel);
+                    }
+                    else
+                    {
+                        var orderGoodsModel = new OrderGoodsModel();
+                        orderGoodsModel.OrderId = orderInModel.Id;
+                        orderGoodsModel.Type = OrderInOutType.In;
+                        orderGoodsModel.GoodsId = item;
+                        orderGoodsModel.Quantity = goodsNums[i];
+                        orderGoodsModel.CreateAt = orderGoodsModel.UpdateAt = DateTime.Now;
+                        orderGoodsModel.Deleted = DeleteType.Enable;
+                        _context.OrderGoodsModels.Add(orderGoodsModel);
+                    }
+                    i++;
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+
+
             }
             catch (DbUpdateConcurrencyException)
             {
