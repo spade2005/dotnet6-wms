@@ -79,13 +79,13 @@ public class OrderInModel
         switch (StockStatus)
         {
             case StockType.Pending:
-                str = "待处理";
+                str = "正在处理";
                 break;
             case StockType.Success:
                 str = "处理成功";
                 break;
             case StockType.Default:
-                str = "等待审核";
+                str = "等待执行";
                 break;
         }
         return str;

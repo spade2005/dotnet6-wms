@@ -52,7 +52,9 @@ public class OrderInController : BaseController
         {
             return NotFound();
         }
-        ViewData["list"] = await GoodsService.CreateObject().setDbContext(_context).getOrderGoods(orderInModel);
+        var orderGoodsList = await GoodsService.CreateObject().setDbContext(_context).getOrderGoods(orderInModel);
+        orderGoodsList = await GoodsService.CreateObject().formatOrderGoods(orderGoodsList);
+        ViewData["list"] = orderGoodsList;
 
         return View(orderInModel);
     }
@@ -326,7 +328,9 @@ public class OrderInController : BaseController
         {
             return NotFound();
         }
-        ViewData["list"] = await GoodsService.CreateObject().setDbContext(_context).getOrderGoods(orderInModel);
+        var orderGoodsList = await GoodsService.CreateObject().setDbContext(_context).getOrderGoods(orderInModel);
+        orderGoodsList = await GoodsService.CreateObject().formatOrderGoods(orderGoodsList);
+        ViewData["list"] = orderGoodsList;
         return View(orderInModel);
     }
 
@@ -342,10 +346,70 @@ public class OrderInController : BaseController
         var orderInModel = await _context.OrderInModels.FindAsync(id);
         if (orderInModel != null && orderInModel.Deleted == DeleteType.Enable)
         {
-            _context.OrderInModels.Remove(orderInModel);
+            orderInModel.UpdateAt = DateTime.Now;
+            orderInModel.Deleted = DeleteType.Disable;
+            _context.Update(orderInModel);
+            //delete orderGoods
+            _context.Database.ExecuteSqlRaw("UPDATE wms_order_goods SET Deleted = 1 WHERE OrderId=" + orderInModel.Id + "");
+            // _context.OrderInModels.Remove(orderInModel);
         }
 
         await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    // GET: OrderIn/Check/5
+    public async Task<IActionResult> Check(int? id)
+    {
+        if (id == null || _context.OrderInModels == null)
+        {
+            return NotFound();
+        }
+
+        var orderInModel = await _context.OrderInModels
+            .FirstOrDefaultAsync(m => m.Id == id);
+        if (orderInModel == null || orderInModel.Deleted != DeleteType.Enable)
+        {
+            return NotFound();
+        }
+        var orderGoodsList = await GoodsService.CreateObject().setDbContext(_context).getOrderGoods(orderInModel);
+        orderGoodsList = await GoodsService.CreateObject().formatOrderGoods(orderGoodsList);
+        ViewData["list"] = orderGoodsList;
+        return View(orderInModel);
+    }
+
+    // POST: OrderIn/Check/5
+    [HttpPost, ActionName("Check")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CheckConfirmed(int id, OrderStatusType orderStatus)
+    {
+        if (_context.OrderInModels == null)
+        {
+            return Problem("Entity set 'MvcAndyContext.OrderInModels'  is null.");
+        }
+        var orderInModel = await _context.OrderInModels.FindAsync(id);
+
+        if (orderInModel != null && orderInModel.Deleted == DeleteType.Enable)
+        {
+            if (orderInModel.OrderStatus != OrderStatusType.Pending)
+            {
+                return NotFound();
+            }
+            if (orderStatus != OrderStatusType.Failed && orderStatus != OrderStatusType.Success)
+            {
+                return NotFound();
+            }
+            //更新审核
+            orderInModel.OrderStatus = orderStatus;
+            orderInModel.AuditTime = DateTime.Now;
+            orderInModel.UpdateAt = DateTime.Now;
+            _context.Update(orderInModel);
+            // _context.OrderInModels.Remove(orderInModel);
+            await _context.SaveChangesAsync();
+            //update goods quantity
+        }
+
+
         return RedirectToAction(nameof(Index));
     }
 

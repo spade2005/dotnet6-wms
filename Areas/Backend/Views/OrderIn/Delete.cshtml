@@ -1,87 +1,158 @@
 @model mvc_andy.Models.wms.OrderInModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "删除确认";
 }
 
-<h1>Delete</h1>
+<h1>删除确认</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>请确认是否删除当前信息?</h3>
 <div>
-    <h4>OrderInModel</h4>
+    <h4>只能删除未审核的入库单</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OrderNo)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.OrderNo)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Mark)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Mark)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OrderStatus)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderStatus)
+        <dd class="col-sm-10">
+            @Model.OrderStatusStr()
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StockStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StockStatus)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.AuditTime)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AuditTime)
+        <dd class="col-sm-10">
+            @if (@Model.AuditTime == DateTime.MinValue)
+            {
+                <span>-</span>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.AuditTime)
+            }
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StockStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.StockStatusStr()
+        </dd>        
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StockTime)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StockTime)
+        <dd class="col-sm-10">
+            @if (@Model.StockTime == DateTime.MinValue)
+            {
+                <span>-</span>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.StockTime)
+            }
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TimeOfDay)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TimeOfDay)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TimeOfMonth)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TimeOfMonth)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreateAt)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CreateAt)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UpdateAt)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UpdateAt)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Deleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Deleted)
-        </dd>
+
+        <div class="form-group" id="goods-div">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>名称</th>
+                        <th>分类</th>
+                        <th>货号/sku</th>
+                        <th>现有库存</th>
+                        <th width="120">库存数量</th>
+                    </tr>
+                </thead>
+                <tbody id="goods-box">
+                    <tr>
+                        <td colspan="6" class="text-center">请选入本次入库商品...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="执行删除" class="btn btn-danger" /> |
+        <a asp-action="Index">返回列表</a>
     </form>
 </div>
+
+@section MyScripts {
+<script>
+    var global_goods = {
+        list: [], selectList: [], selectSet: [], timer: undefined,
+    };
+    $(function () {
+        
+    })
+    function joinSuccess() {
+        let list = global_goods.selectList;
+        let str = "";
+        if (list == undefined || list.length <= 0) {
+            $("#goods-box").html(str);
+            return;
+        }
+        for (let i in list) {
+            let obj = list[i];
+            str += '<tr>' +
+                '<td>' + obj['id'] + '</td>' +
+                '<td>' + obj['title'] + '</td>' +
+                '<td>' + obj['cateName'] + '</td>' +
+                '<td>' + obj['serialNumber'] + '/' + obj['sku'] + '</td>' +
+                '<td>' + obj['quantity'] + '/' + obj['totalQuantity'] + '</td>' +
+                '<td><input type="text" class="form-control text-center" readonly value="' + obj['num'] + '"  /></td>' +
+                '</tr>';
+        }
+        $("#goods-box").html(str);
+    }
+    
+</script>
+
+<script>
+    let tmp;
+    @{
+        var list = ViewData["list"] as List<mvc_andy.Models.wms.OrderGoodsModel>;
+        }
+        @if (list != null && list.Any())
+        {
+            int i =0;
+            foreach(var item in list){
+<text>
+        global_goods.selectSet.push(@item.GoodsId);
+        tmp=@Json.Serialize(item.goods);
+        tmp["num"]=@item.Quantity;
+        global_goods.selectList.push(tmp);
+</text>
+i++;
+            }
+        }
+        joinSuccess();
+</script>
+
+}

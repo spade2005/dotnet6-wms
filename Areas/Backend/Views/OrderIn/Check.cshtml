@@ -1,12 +1,12 @@
 @model mvc_andy.Models.wms.OrderInModel
 
 @{
-    ViewData["Title"] = "详细";
+    ViewData["Title"] = "审核确认";
 }
 
-<h1>详细</h1>
+<h1>审核确认</h1>
 
-<h3>入库单详细</h3>
+<h3>请审核当前信息！</h3>
 <div>
     <hr />
     <dl class="row">
@@ -46,7 +46,7 @@
         </dt>
         <dd class="col-sm-10">
             @Model.StockStatusStr()
-        </dd>        
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StockTime)
         </dt>
@@ -95,8 +95,11 @@
 
     </dl>
 
-    <form asp-action="Delete">
+    <form asp-action="Check">
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="OrderStatus" />
+        <input type="button" value="审核通过" id="btn-true" class="btn btn-primary" /> |
+        <input type="button" value="审核不通过" id="btn-false" class="btn btn-danger" /> |
         <a asp-action="Index">返回列表</a>
     </form>
 </div>
@@ -107,7 +110,15 @@
         list: [], selectList: [], selectSet: [], timer: undefined,
     };
     $(function () {
+        $("#btn-true").on("click",function(){
+            $("#OrderStatus").val("@mvc_andy.Models.com.OrderStatusType.Success");
+            $(this).parent("form").eq(0).submit();
+        })
         
+        $("#btn-false").on("click",function(){
+            $("#OrderStatus").val("@mvc_andy.Models.com.OrderStatusType.Failed");
+            $(this).parent("form").eq(0).submit();
+        })
     })
     function joinSuccess() {
         let list = global_goods.selectList;

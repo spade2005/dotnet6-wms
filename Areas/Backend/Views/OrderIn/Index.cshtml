@@ -88,8 +88,26 @@
                     @Html.DisplayFor(modelItem => item.UpdateAt)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">更新</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                    @if (item.OrderStatus == mvc_andy.Models.com.OrderStatusType.Success)
+                    {
+                        <text>
+                            <a asp-action="Details" asp-route-id="@item.Id">查看</a>
+                        </text>
+                    }
+                    @if (item.OrderStatus == mvc_andy.Models.com.OrderStatusType.Pending)
+                    {
+                        <text>
+                            <a asp-action="Edit" asp-route-id="@item.Id">更新</a> |
+                            <a asp-action="Check" asp-route-id="@item.Id">审核</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                        </text>
+                    }
+                    @if (item.OrderStatus == mvc_andy.Models.com.OrderStatusType.Failed)
+                    {
+                        <text>
+                            <a asp-action="Edit" asp-route-id="@item.Id">更新</a>
+                        </text>
+                    }
                 </td>
             </tr>
         }
