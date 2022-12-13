@@ -73,13 +73,14 @@ public class GoodsService
 
 
     // 获取入库单商品明细
-    public async Task<List<OrderGoodsModel>> getOrderGoods(OrderInModel orderInModel)
+    public async Task<List<OrderGoodsModel>> getOrderGoods(int orderId,OrderInOutType Type)
     {
         if (_context == null) return new List<OrderGoodsModel>();
         var model = from m in _context.OrderGoodsModels
                     where m.Deleted.Equals(DeleteType.Enable)
                     select m;
-        model = model.Where(s => s.OrderId.Equals(orderInModel.Id));
+        model = model.Where(s => s.OrderId.Equals(orderId));
+        model = model.Where(s => s.Type.Equals(Type));
         var orderGoodsList = await model.ToListAsync();
         return orderGoodsList;
 

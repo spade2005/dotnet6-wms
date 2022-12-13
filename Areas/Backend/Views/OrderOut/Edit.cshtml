@@ -1,0 +1,319 @@
+@model mvc_andy.Models.wms.OrderOutModel
+
+@{
+    ViewData["Title"] = "修改出库单";
+}
+
+<h1>修改出库单</h1>
+
+<h4>出库单审核后不可修改。</h4>
+<hr />
+<div class="row">
+    <div class="col-md-7">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            @if (Model.OrderStatus == mvc_andy.Models.com.OrderStatusType.Success)
+            {
+                <div class="form-group">
+                    <label asp-for="OrderNo" class="control-label"></label>
+                    <input asp-for="OrderNo" class="form-control" readonly />
+                    <span asp-validation-for="OrderNo" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="OrderNo" class="control-label"></label>
+                    <input asp-for="OrderNo" class="form-control" />
+                    <span asp-validation-for="OrderNo" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Mark" class="control-label"></label>
+                <input asp-for="Mark" class="form-control" />
+                <span asp-validation-for="Mark" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderStatus" class="control-label"></label>
+                <input type="text" value="@Model.OrderStatusStr()" class="form-control" readonly />
+                <span asp-validation-for="OrderStatus" class="text-danger"></span>
+            </div>
+            @if (@Model.AuditTime == DateTime.MinValue)
+            {
+
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="AuditTime" class="control-label"></label>
+                    <input asp-for="AuditTime" readonly class="form-control" />
+                    <span asp-validation-for="AuditTime" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="StockStatus" class="control-label"></label>
+                <input type="text" value="@Model.StockStatusStr()" class="form-control" readonly />
+                <span asp-validation-for="StockStatus" class="text-danger"></span>
+            </div>
+            @if (@Model.StockTime == DateTime.MinValue)
+            {
+
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="StockTime" class="control-label"></label>
+                    <input asp-for="StockTime" readonly class="form-control" />
+                    <span asp-validation-for="StockTime" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                @if (Model.OrderStatus != mvc_andy.Models.com.OrderStatusType.Success)
+                {
+                    <label class="control-label">点击选择商品</label><br>
+                    <input type="button" id="btn-chose" value="选择商品" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#goods-modal" />
+                }
+            </div>
+            <div class="form-group" id="goods-div">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>名称</th>
+                            <th>分类</th>
+                            <th>货号/sku</th>
+                            <th>现有库存</th>
+                            <th width="120">库存数量</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="goods-box">
+                        <tr>
+                            <td colspan="6" class="text-center">请选入本次入库商品...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group">
+                @if (Model.OrderStatus != mvc_andy.Models.com.OrderStatusType.Success)
+                {
+                    <input type="submit" value="修改" class="btn btn-primary" />
+                }
+                <div class="text-danger fs-6 d-inline" role="alert" id="form-tips"></div>
+            </div>
+            <div id="input-hidden" class="d-none">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="goods-modal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">查询入库商品 <span id="alert-tips"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row">
+                    <div class="col-auto">
+                        <label for="goods_sn" class="visually-hidden">商品货号</label>
+                        <input type="text" class="form-control" id="goods_sn" placeholder="商品货号">
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="goods_title" class="visually-hidden">商品标题</label>
+                        <input type="text" class="form-control" id="goods_title" placeholder="商品标题">
+                    </div>
+                    <div class="mb-3 col-auto">
+                        <button type="button" value="查询" id="btn-goods-query" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>名称</th>
+                            <th>分类</th>
+                            <th>货号/sku</th>
+                            <th>库存</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-box">
+                        <tr>
+                            <td colspan="6" class="text-center">loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @*
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btn-chose-save">保存</button>
+                </div>
+            *@
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index">返回列表</a>
+</div>
+
+@section MyScripts {
+<script>
+    var global_goods = {
+        list: [], selectList: [], selectSet: [], timer: undefined,
+    };
+    $(function () {
+        $("#btn-chose").on("click", function () {
+            $("#goods-div").removeClass("visually-hidden");
+            fetchGoods(0);
+        })
+        $("#btn-goods-query").on("click", function () {
+            fetchGoods(0);
+        })
+        $("#input-hidden").parent("form").eq(0).on("submit", function () {
+            @if(Model.OrderStatus==mvc_andy.Models.com.OrderStatusType.Success){
+                <text>
+                    return false;
+                </text>
+            }
+            let list = global_goods.selectList;
+            let str = "";
+            if (list == undefined || list.length <= 0) {
+                $("#form-tips").html("请选择入库商品");
+                return false;
+            }
+            for (let i in list) {
+                let obj = list[i];
+                if (isNaN(obj["num"]) || obj["num"] * 1 <= 0) {
+                    $("#form-tips").html("请选择入库商品数量");
+                    return false;
+                }
+                str += '<input type="hidden" name="goodsIds[]" value="' + obj['id'] + '"  />' +
+                    '<input type="hidden" name="goodsNums[]" value="' + obj['num'] + '"  />';
+            }
+            $("#input-hidden").html(str);
+            return true;
+        });
+    })
+    function removeOrder(ind) {
+         @if(Model.OrderStatus==mvc_andy.Models.com.OrderStatusType.Success){
+                <text>
+                    return false;
+                </text>
+            }
+        global_goods.selectSet.splice(ind, 1);
+        global_goods.selectList.splice(ind, 1);
+        joinSuccess();
+    }
+    function changeGoodsNum(ind, inp) {
+        global_goods.selectList[ind]["num"] = $(inp).val();
+    }
+    function joinSuccess() {
+        let list = global_goods.selectList;
+        let str = "";
+        if (list == undefined || list.length <= 0) {
+            $("#goods-box").html(str);
+            return;
+        }
+        for (let i in list) {
+            let obj = list[i];
+            str += '<tr>' +
+                '<td>' + obj['id'] + '</td>' +
+                '<td>' + obj['title'] + '</td>' +
+                '<td>' + obj['cateName'] + '</td>' +
+                '<td>' + obj['serialNumber'] + '/' + obj['sku'] + '</td>' +
+                '<td>' + obj['quantity'] + '/' + obj['totalQuantity'] + '</td>' +
+                '<td><input type="text" class="form-control text-center" onkeyup="changeGoodsNum(' + i + ',this)" value="' + obj['num'] + '"  /></td>' +
+                '<td><button type="button" class="btn btn-danger" onclick="removeOrder(' + i + ')" >移除</button></td>' +
+                '</tr>';
+        }
+        $("#goods-box").html(str);
+    }
+
+    function joinOrder(item) {
+        $("#alert-tips").html('<div class="text-danger fs-6 d-inline" role="alert">选入成功！</div>');
+        global_goods.timer && clearTimeout(global_goods.timer);
+        global_goods.timer = setTimeout(function () {
+            if ($("#alert-tips").html() != "") {
+                $("#alert-tips").html("");
+            }
+        }, 1500);
+        let id = global_goods.list[item]["id"];
+        if (global_goods.selectSet.indexOf(id) >= 0) {
+            return;
+        }
+        global_goods.selectSet.push(id);
+        global_goods.selectList.push(global_goods.list[item]);
+        joinSuccess();
+    }
+    function fetchGoods(start) {
+        let url = "/Manage/Goods/ListJson";
+        let data = {
+            goodsSn: $("#goods_sn").val().trim(),
+            goodsTitle: $("#goods_title").val().trim(),
+            start: start,
+        };
+        $.get(url, data, function (res) {
+            if (res.code != 0) {
+                return;
+            }
+            if (res.data == undefined || res.data.list == undefined) {
+                return;
+            }
+            let list = res.data.list;
+            let cateList = res.data.cateList;
+            let str = "";
+            for (let i in list) {
+                let obj = list[i];
+                let cname = cateList[obj['cateId']] ?? "-";
+                str += '<tr>' +
+                    '<td>' + obj['id'] + '</td>' +
+                    '<td>' + obj['title'] + '</td>' +
+                    '<td>' + cname + '</td>' +
+                    '<td>' + obj['serialNumber'] + '/' + obj['sku'] + '</td>' +
+                    '<td>' + obj['quantity'] + '/' + obj['totalQuantity'] + '</td>' +
+                    '<td><button type="button" class="btn btn-danger" onclick="joinOrder(' + i + ')" id="btn-chose-save">选入</button></td>' +
+                    '</tr>';
+                list[i]['cateName'] = cname;
+                list[i]['num'] = 0;
+            }
+            global_goods.list = list;
+            $("#table-box").html(str);
+        }, 'json');
+    }
+</script>
+
+<script>
+    let tmp;
+    @{
+        var list = ViewData["list"] as List<mvc_andy.Models.wms.OrderGoodsModel>;
+        }
+        @if (list != null && list.Any())
+        {
+            int i =0;
+            foreach(var item in list){
+<text>
+        global_goods.selectSet.push(@item.GoodsId);
+        tmp=@Json.Serialize(item.goods);
+        tmp["num"]=@item.Quantity;
+        global_goods.selectList.push(tmp);
+</text>
+i++;
+            }
+        }
+        joinSuccess();
+</script>
+
+}
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,13 +1,14 @@
-@model mvc_andy.Models.wms.OrderInModel
+@model mvc_andy.Models.wms.OrderOutModel
 
 @{
-    ViewData["Title"] = "详细";
+    ViewData["Title"] = "删除确认";
 }
 
-<h1>详细</h1>
+<h1>删除确认</h1>
 
+<h3>请确认是否删除当前信息?</h3>
 <div>
-    <h4>入库单详细</h4>
+    <h4>只能删除未审核的单</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -46,7 +47,8 @@
         </dt>
         <dd class="col-sm-10">
             @Model.StockStatusStr()
-        </dd>        
+        </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StockTime)
         </dt>
@@ -72,8 +74,9 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UpdateAt)
         </dd>
+    </dl>
 
-        <div class="form-group" id="goods-div">
+    <div class="form-group" id="goods-div">
             <table class="table">
                 <thead>
                     <tr>
@@ -92,13 +95,13 @@
                 </tbody>
             </table>
         </div>
-    </dl>
 
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="执行删除" class="btn btn-danger" /> |
+        <a asp-action="Index">返回列表</a>
+    </form>
 </div>
-<div>
-    <a asp-action="Index">返回列表</a>
-</div>
-
 
 @section MyScripts {
 <script>

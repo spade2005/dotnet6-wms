@@ -21,7 +21,7 @@ public class OrderInModel
     public string Mark { get; set; } = string.Empty;
 
 
-    [Display(Name = "入库商品")]
+    [Display(Name = "商品数量")]
     public int GoodsNum { get; set; } = 0;
 
     [Display(Name = "单据状态")]
@@ -51,9 +51,6 @@ public class OrderInModel
     [Display(Name = "更新日期")]
     public DateTime UpdateAt { get; set; }
     public DeleteType Deleted { get; set; }
-
-    [NotMapped]
-    public List<OrderGoodsModel>? GoodsList { get; set; }
 
     public string OrderStatusStr()
     {
@@ -89,7 +86,6 @@ public class OrderInModel
                 break;
         }
         return str;
-
     }
 
 }

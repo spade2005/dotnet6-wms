@@ -1,4 +1,4 @@
-@model mvc_andy.Models.wms.OrderInModel
+@model mvc_andy.Models.wms.OrderOutModel
 
 @{
     ViewData["Title"] = "详细";
@@ -7,31 +7,31 @@
 <h1>详细</h1>
 
 <div>
-    <h4>入库单详细</h4>
+    <h4>出库单详细</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.OrderNo)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.OrderNo)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Mark)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Mark)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.OrderStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Model.OrderStatusStr()
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AuditTime)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @if (@Model.AuditTime == DateTime.MinValue)
             {
                 <span>-</span>
@@ -41,16 +41,17 @@
                 @Html.DisplayFor(model => model.AuditTime)
             }
         </dd>
-        <dt class="col-sm-2">
+
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.StockStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Model.StockStatusStr()
-        </dd>        
-        <dt class="col-sm-2">
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.StockTime)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @if (@Model.StockTime == DateTime.MinValue)
             {
                 <span>-</span>
@@ -60,16 +61,16 @@
                 @Html.DisplayFor(model => model.StockTime)
             }
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CreateAt)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreateAt)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UpdateAt)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.UpdateAt)
         </dd>
 

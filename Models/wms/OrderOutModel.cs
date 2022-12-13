@@ -18,7 +18,7 @@ public class OrderOutModel
     [StringLength(250, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 1)]
     public string Mark { get; set; } = string.Empty;
 
-    [Display(Name = "操作数量")]
+    [Display(Name = "商品数量")]
     public int GoodsNum { get; set; } = 0;
 
     [Display(Name = "单据状态")]
@@ -48,5 +48,41 @@ public class OrderOutModel
     [Display(Name = "更新日期")]
     public DateTime UpdateAt { get; set; }
     public DeleteType Deleted { get; set; }
+
+    public string OrderStatusStr()
+    {
+        string str = string.Empty;
+        switch (OrderStatus)
+        {
+            case OrderStatusType.Pending:
+                str = "待审核";
+                break;
+            case OrderStatusType.Success:
+                str = "审核成功";
+                break;
+            case OrderStatusType.Failed:
+                str = "审核失败";
+                break;
+        }
+        return str;
+    }
+
+    public string StockStatusStr()
+    {
+        string str = string.Empty;
+        switch (StockStatus)
+        {
+            case StockType.Pending:
+                str = "正在处理";
+                break;
+            case StockType.Success:
+                str = "处理成功";
+                break;
+            case StockType.Default:
+                str = "等待执行";
+                break;
+        }
+        return str;
+    }
 
 }
