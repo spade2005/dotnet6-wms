@@ -97,12 +97,15 @@
                     </tbody>
                 </table>
             </div>
-            @*
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="btn-chose-save">保存</button>
-                </div>
-            *@
+
+            <div class="modal-footer">
+                <a id="btn-goods-prev" class="btn btn-default disabled">
+                    Previous
+                </a>
+                <a id="btn-goods-next" class="btn btn-default disabled">
+                    Next
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -114,14 +117,17 @@
 <script>
     var global_goods = {
         list: [], selectList: [], selectSet: [], timer: undefined,
+        pageStart: 0, pageLen: 10,
     };
     $(function () {
         $("#btn-chose").on("click", function () {
             $("#goods-div").removeClass("visually-hidden");
-            fetchGoods(0);
+            global_goods.pageStart = 0;
+            fetchGoods(global_goods.pageStart);
         })
         $("#btn-goods-query").on("click", function () {
-            fetchGoods(0);
+            global_goods.pageStart = 0;
+            fetchGoods(global_goods.pageStart);
         })
         $("#input-hidden").parent("form").eq(0).on("submit", function () {
             let list = global_goods.selectList;
@@ -141,6 +147,14 @@
             }
             $("#input-hidden").html(str);
             return true;
+        })
+        $("#btn-goods-prev").on("click", function () {
+            global_goods.pageStart = global_goods.pageStart - global_goods.pageLen;
+            fetchGoods(global_goods.pageStart);
+        })
+        $("#btn-goods-next").on("click", function () {
+            global_goods.pageStart = global_goods.pageStart + global_goods.pageLen;
+            fetchGoods(global_goods.pageStart);
         })
     })
     function removeOrder(ind) {
@@ -195,6 +209,7 @@
             goodsSn: $("#goods_sn").val().trim(),
             goodsTitle: $("#goods_title").val().trim(),
             start: start,
+            length: global_goods.pageLen,
         };
         $.get(url, data, function (res) {
             if (res.code != 0) {
@@ -203,6 +218,7 @@
             if (res.data == undefined || res.data.list == undefined) {
                 return;
             }
+            let count = res.data.count;
             let list = res.data.list;
             let cateList = res.data.cateList;
             let str = "";
@@ -221,11 +237,25 @@
                 list[i]['num'] = 0;
             }
             global_goods.list = list;
+            calcPaginate(count, start);
             $("#table-box").html(str);
         }, 'json');
+    }
+    function calcPaginate(count, start) {
+        let len = global_goods.pageLen;
+        if (count > start + len) {
+            $("#btn-goods-next").removeClass("disabled");
+        } else {
+            $("#btn-goods-next").addClass("disabled");
+        }
+        if (start > 0) {
+            $("#btn-goods-prev").removeClass("disabled");
+        } else {
+            $("#btn-goods-prev").addClass("disabled");
+        }
     }
 </script>
 }
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

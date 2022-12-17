@@ -80,8 +80,6 @@ public class AuthController : Controller
             await _context.SaveChangesAsync();
             // userLog.Message += " success";
             // UserLogHelp.Load().publish(userLog);
-            System.Console.WriteLine(" print set id");
-                System.Console.WriteLine(HttpContext);
             if (HttpContext != null)
             {
                 System.Console.WriteLine("not null.set id");

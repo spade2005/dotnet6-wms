@@ -239,6 +239,7 @@ public class GoodsController : BaseController
         {
             length = 10;
         }
+        var count = await model.CountAsync();
         var list = await model.AsNoTracking().Skip((int)start).Take((int)length)
         .Select(m => new
         {
@@ -269,7 +270,7 @@ public class GoodsController : BaseController
         // }
         // return Json(list);
         return Json(CommonService.CreateObject().jsonFormat(0, "success",
-            new Dictionary<string, object>() { { "list", list }, { "cateList", cateList } }
+            new Dictionary<string, object>() { { "list", list }, { "cateList", cateList }, { "count", count } }
         ));
         // return Json(CommonService.CreateObject().jsonFormat(0, "success", list));
     }
